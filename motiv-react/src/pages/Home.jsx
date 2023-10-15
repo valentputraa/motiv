@@ -1,10 +1,15 @@
 import UserNavbar from "../components/UserNavbar"
+import Navbar from "../components/Navbar";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { setToken } from "../helper/tokenHelper";
 
 const Home = () => {
 
   const [posts, setPosts] = useState([])
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const token = setToken();
 
   const getPosts = async () => {
     try {
@@ -17,11 +22,15 @@ const Home = () => {
 
   useEffect ( () => {
     getPosts()
+    if (token) {
+      setIsLoggedIn(true)
+    }
+
   }, []);
 
   return (
     <div>
-      <UserNavbar/>
+      {isLoggedIn ? <UserNavbar/> : <Navbar/>}
       <div className="row mb-2 mt-4">
     {posts.map((post, index) => (
       <div className="col-md-4" key={index}>

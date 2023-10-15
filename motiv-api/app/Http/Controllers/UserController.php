@@ -50,7 +50,6 @@ class UserController extends Controller
 
         $token = $user->createToken('user login')->plainTextToken;
 
-        return response()->json(['token' => $token, 'user' => $user]);
-
+        return response()->json(['token' => $token, 'user' => $user])->cookie('token', $token, 60);
     }
 }

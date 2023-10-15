@@ -1,4 +1,5 @@
 import Navbar from "../components/Navbar";
+import UserNavbar from "../components/UserNavbar";
 import LoginModal from "../components/LoginModal";
 import SignUpModal from "../components/SignUpModal";
 import { Row, Col, Container, Button } from "react-bootstrap";
@@ -9,6 +10,10 @@ const Index = () => {
 
   const [latestData, setLatestData] = useState([])
   const [notification, setNotification] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const token = localStorage.getItem("token")
+
 
   const handleNotification = (message) => {
     setNotification(message);
@@ -26,11 +31,14 @@ const Index = () => {
 
   useEffect ( () => {
     getPosts()
+    if (token) {
+      setIsLoggedIn(true)
+    }
   }, []);
 
   return (
     <div>
-      <Navbar/>
+        {isLoggedIn ? <UserNavbar/> : <Navbar/>}
 
       <LoginModal/>
       <SignUpModal onSuccess={handleNotification} />

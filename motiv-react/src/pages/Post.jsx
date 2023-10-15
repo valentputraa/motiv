@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
 import UserNavbar from "../components/UserNavbar";
+import Navbar from "../components/Navbar";
 
 const Post = () => {
   const [post, setPost] = useState([]);
@@ -10,23 +11,27 @@ const Post = () => {
   const [article, setArticle] = useState("");
   const [comments, setComments] = useState([]);
   const [inputComment, setInputComment] = useState("");
-  const token = localStorage.getItem("token")
-  const { id } = useParams();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  const token = localStorage.getItem("token");
+  const { id } = useParams();
 
   const postComment = async (e) => {
     try {
-      e.preventDefault()
-      await axios.post("http://127.0.0.1:8000/api/comment", {
-        "id_post" : id,
-        "comment" : inputComment
-      },{
-        headers : {
-          Authorization: `Bearer ${token}`
-
+      e.preventDefault();
+      await axios.post(
+        "http://127.0.0.1:8000/api/comment",
+        {
+          id_post: id,
+          comment: inputComment,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      })
-      getPost()
+      );
+      getPost();
     } catch (error) {
       console.log(error);
     }
@@ -41,16 +46,20 @@ const Post = () => {
       setComments(data.data.data.comments);
     } catch (error) {
       console.log(error);
+      
     }
   };
 
   useEffect(() => {
     getPost();
+    if (token) {
+      setIsLoggedIn(true);
+    }
   }, []);
 
   return (
     <div>
-      <UserNavbar />
+      {isLoggedIn ? <UserNavbar /> : <Navbar />}
       <Container>
         <Row>
           <Col className="me-5 mt-5">
@@ -82,33 +91,38 @@ const Post = () => {
           <Col>
             <h5>Comments</h5>
             <Form onSubmit={postComment}>
-              
-            <Form.Control
-              type="text"
-              placeholder="add comments..."
-              value={inputComment}
-              onChange={(e) => setInputComment(e.target.value)}
-            />
-            <div className="d-flex justify-content-end">
-              <Button variant="primary" className="mt-2" type="submit">
-                Kirim
-              </Button>
-              <Button variant="light" className="mt-2 me-2" onClick={() => setInputComment('')} >
-                Batal
-              </Button>
-            </div>
+              <Form.Control
+                type="text"
+                placeholder="add comments..."
+                value={inputComment}
+                onChange={(e) => setInputComment(e.target.value)}
+              />
+              <div className="d-flex justify-content-end">
+                <Button variant="primary" className="mt-2" type="submit" disabled={!isLoggedIn}>
+                  Kirim
+                </Button>
+                <Button
+                  variant="light"
+                  className="mt-2 me-2"
+                  onClick={() => setInputComment("")}
+                >
+                  Batal
+                </Button>
+              </div>
             </Form>
-            {comments.map((comment, index) => (
-              <Card key={index} className="mt-3">
-                <Card.Body>
-                  <Card.Title>{comment.username}</Card.Title>
-                  <Card.Subtitle className="mb-2 text-muted">
-                    {comment.created_at}
-                  </Card.Subtitle>
-                  <Card.Text>{comment.comment_content}</Card.Text>
-                </Card.Body>
-              </Card>
-            )).reverse()}
+            {comments
+              .map((comment, index) => (
+                <Card key={index} className="mt-3">
+                  <Card.Body>
+                    <Card.Title>{comment.username}</Card.Title>
+                    <Card.Subtitle className="mb-2 text-muted">
+                      {comment.created_at}
+                    </Card.Subtitle>
+                    <Card.Text>{comment.comment_content}</Card.Text>
+                  </Card.Body>
+                </Card>
+              ))
+              .reverse()}
           </Col>
         </Row>
       </Container>
