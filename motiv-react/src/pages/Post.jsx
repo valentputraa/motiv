@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom";
 import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
 import UserNavbar from "../components/UserNavbar";
 import Navbar from "../components/Navbar";
+import LoginModal from "../components/LoginModal";
+import SignUpModal from "../components/SignUpModal";
 
 const Post = () => {
   const [post, setPost] = useState([]);
@@ -12,6 +14,9 @@ const Post = () => {
   const [comments, setComments] = useState([]);
   const [inputComment, setInputComment] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [notification, setNotification] = useState("");
+
+  
 
   const token = localStorage.getItem("token");
   const { id } = useParams();
@@ -50,6 +55,10 @@ const Post = () => {
     }
   };
 
+  const handleNotification = (message) => {
+    setNotification(message);
+  };
+
   useEffect(() => {
     getPost();
     if (token) {
@@ -60,7 +69,16 @@ const Post = () => {
   return (
     <div>
       {isLoggedIn ? <UserNavbar /> : <Navbar />}
+       <LoginModal />
+      <SignUpModal onSuccess={handleNotification} />
+
+    
       <Container>
+      {notification && (
+  <div className="alert alert-success mt-2" role="alert">
+    {notification}
+  </div>
+)}
         <Row>
           <Col className="me-5 mt-5">
             <h1>{post.title}</h1>

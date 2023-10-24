@@ -29,6 +29,10 @@ Route::middleware(['auth:sanctum'])->group(function (){
     Route::patch('/comment/{id}', [CommentController::class, 'update'])->middleware('check.comment.owner');
     Route::delete('/comment/{id}', [CommentController::class, 'destroy'])->middleware('check.comment.owner');
 
+    Route::get('/posts/user/{id}', [UserController::class, 'getUserPosts']);
+
+    Route::get('/me', [UserController::class, 'getMe']);
+
 });
 Route::get('/posts', [PostController::class, 'index']);
 Route::get('/post/{id}', [PostController::class, 'show']);

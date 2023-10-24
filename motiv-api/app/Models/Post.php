@@ -25,6 +25,7 @@ class Post extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
+
     /**
      * Get all of the comments for the Post
      *

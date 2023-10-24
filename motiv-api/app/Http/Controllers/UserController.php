@@ -50,6 +50,19 @@ class UserController extends Controller
 
         $token = $user->createToken('user login')->plainTextToken;
 
-        return response()->json(['token' => $token, 'user' => $user])->cookie('token', $token, 60);
+        return response()->json(['token' => $token, 'user' => $user]);
+    }
+
+    public function getMe(Request $request){
+        $user = $request->user();
+
+        return response()->json(['data' => $user ]);
+    }
+
+    public function getUserPosts($id){
+        $user = User::find($id);
+        $posts = $user->posts;
+
+        return response()->json(['posts' => $posts], 200);
     }
 }

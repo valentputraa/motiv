@@ -2,9 +2,10 @@ import Navbar from "../components/Navbar";
 import UserNavbar from "../components/UserNavbar";
 import LoginModal from "../components/LoginModal";
 import SignUpModal from "../components/SignUpModal";
-import { Row, Col, Container, Button } from "react-bootstrap";
+import { Row, Col, Container } from "react-bootstrap";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const Index = () => {
 
@@ -54,7 +55,7 @@ const Index = () => {
             <div className="p-5" >
               <h1 className="mb-4">Stay Motivated</h1>
               <p className="mb-3">Discover a world of writer&apos;s insights on any topic.</p>
-              <Button className="badge p-3 btn-dark">Start Reading</Button>
+              <Link to={"/home"} className="btn badge p-3 btn-dark">Start Reading</Link>
             </div>
           </Col>
         </Row>
